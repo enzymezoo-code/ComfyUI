@@ -175,6 +175,10 @@ class TestCompareImageMetrics:
         # Find a file in file_paths with matching metadata to baseline_file
         baseline_prompt = self.read_file_prompt(baseline_file)
 
+        # Do not match empty prompts
+        if baseline_prompt is None or baseline_prompt == "":
+            return None
+
         # Find file match
         # Reorder test_file_names so that the file with matching name is first
         # This is an optimization because matching file names are more likely 
