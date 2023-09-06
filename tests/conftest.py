@@ -3,7 +3,7 @@ import pytest
 
 # Command line arguments for pytest
 def pytest_addoption(parser):
-    parser.addoption('--output_dir', action="store", default='tests/inference/samples/test', help='Output directory for generated images')
+    parser.addoption('--output_dir', action="store", default='tests/inference/samples', help='Output directory for generated images')
     parser.addoption("--listen", type=str, default="127.0.0.1", metavar="IP", nargs="?", const="0.0.0.0", help="Specify the IP address to listen on (default: 127.0.0.1). If --listen is provided without an argument, it defaults to 0.0.0.0. (listens on all)")
     parser.addoption("--port", type=int, default=8188, help="Set the listen port.")
 
@@ -24,10 +24,13 @@ def pytest_collection_modifyitems(items):
     
     LAST_TESTS = ['test_quality']
 
-    module_name_map = {item.module.__name__: item for item in items}
+    # Move the last items to the end
+    last_items = []
+    for test_name in LAST_TESTS:
+        for item in items.copy():
+            print(item.module.__name__, item)
+            if item.module.__name__  == test_name:
+                last_items.append(item)
+                items.remove(item)
 
-    # Move the last tests to the end
-    for test in LAST_TESTS:
-        if test in module_name_map:
-            items.append(module_name_map[test])
-            items.remove(module_name_map[test])
+    items.extend(last_items)

@@ -3,8 +3,8 @@ import pytest
 
 # Command line arguments for pytest
 def pytest_addoption(parser):
-    parser.addoption('--baseline_dir', action="store", default='tests/inference/samples/baseline', help='Directory for ground-truth images')
-    parser.addoption('--test_dir', action="store", default='tests/inference/samples/test', help='Directory for images to test')
+    parser.addoption('--baseline_dir', action="store", default='tests/inference/baseline', help='Directory for ground-truth images')
+    parser.addoption('--test_dir', action="store", default='tests/inference/samples', help='Directory for images to test')
     parser.addoption('--metrics_file', action="store", default='tests/metrics.md', help='Output file for metrics')
     parser.addoption('--img_output_dir', action="store", default='tests/compare/samples', help='Output directory for diff metric images')
 
@@ -21,7 +21,7 @@ def args_pytest(pytestconfig):
     with open(args['metrics_file'], 'a') as f:
         # if file is empty, write header
         if os.stat(args['metrics_file']).st_size == 0:
-            f.write("| date | run | metric | status | value | \n")
+            f.write("| date | run | file | status | value | \n")
             f.write("| --- | --- | --- | --- | --- | \n")
 
     return args
@@ -39,6 +39,3 @@ def pytest_generate_tests(metafunc):
     if "baseline_fname" in metafunc.fixturenames:
         baseline_fnames = gather_file_basenames(metafunc.config.getoption("baseline_dir"))
         metafunc.parametrize("baseline_fname", baseline_fnames)
-
-
-        
