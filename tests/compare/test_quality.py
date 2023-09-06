@@ -16,7 +16,7 @@ The directories are specified by the command line arguments --baseline_dir and -
 
 """
 # ssim: Structural Similarity Index
-# returns a tuple of (ssim, diff_image)
+# Returns a tuple of (ssim, diff_image)
 def ssim_score(img0: np.ndarray, img1: np.ndarray) -> Tuple[float, np.ndarray]:
     score, diff = ssim(img0, img1, channel_axis=-1, full=True)
     # rescale the difference image to 0-255 range
@@ -53,7 +53,6 @@ class TestCompareImageMetrics:
             metric_path = os.path.join(img_output_dir, metric_dir)
             for file in os.listdir(metric_path):
                 if file.endswith(".png"):
-                    print(file)
                     score = self.lookup_score_from_fname(file, metrics_file)
                     image_file_list = []
                     image_file_list.append([
@@ -71,10 +70,12 @@ class TestCompareImageMetrics:
     def fname(self, baseline_fname):
         yield baseline_fname
         del baseline_fname
-
-    # def test_dir_has_all_files(self, fname, test_file_names):
-    #     # Check that all file names in baseline_dir are in test_dir
-    #     assert fname in test_file_names
+    
+    def test_directories_not_empty(self, args_pytest):
+        baseline_dir = args_pytest['baseline_dir']
+        test_dir = args_pytest['test_dir']
+        assert len(os.listdir(baseline_dir)) != 0, f"Baseline directory {baseline_dir} is empty"
+        assert len(os.listdir(test_dir)) != 0, f"Test directory {test_dir} is empty"
 
     def test_dir_has_all_matching_metadata(self, fname, test_file_names, args_pytest):
         # Check that all files in baseline_dir have a file in test_dir with matching metadata
@@ -149,7 +150,6 @@ class TestCompareImageMetrics:
                                 fname: str,
                                 metrics_output_file: str
         ) -> float:
-        # TODO use a database instead of a text file
         fname_basestr = os.path.splitext(fname)[0]
         with open(metrics_output_file, 'r') as f:
             for line in f:
