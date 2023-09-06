@@ -80,7 +80,7 @@ class TestCompareImageMetrics:
         # Check that all files in baseline_dir have a file in test_dir with matching metadata
         baseline_file_path = os.path.join(args_pytest['baseline_dir'], fname)
         file_paths = [os.path.join(args_pytest['test_dir'], f) for f in test_file_names]
-        file_match = self.find_file_match(self, baseline_file_path, file_paths)
+        file_match = self.find_file_match(baseline_file_path, file_paths)
         assert file_match is not None, f"Could not find a file in {args_pytest['test_dir']} with matching metadata to {baseline_file_path}"
 
     # For a baseline image file, finds the corresponding file name in test_dir and 
@@ -102,7 +102,7 @@ class TestCompareImageMetrics:
 
         # Find file match
         file_paths = [os.path.join(test_dir, f) for f in test_file_names]
-        test_file = self.find_file_match(self, baseline_file_path, file_paths)
+        test_file = self.find_file_match(baseline_file_path, file_paths)
 
         # Run metrics
         sample_baseline = self.read_img(baseline_file_path)
