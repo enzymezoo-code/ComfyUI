@@ -9,7 +9,7 @@ on:
   push:
     paths:
       - "requirements.txt"
-      - "github/workflows/test-build.yml"
+      - ".github/workflows/test-build.yml"
 
 jobs:
   build:
